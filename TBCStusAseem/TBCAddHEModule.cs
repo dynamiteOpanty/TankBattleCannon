@@ -33,9 +33,7 @@ namespace TBCStusSpace
     }
 	public class TBCAddHEBehaviour : BlockModuleBehaviour<TBCAddHEModule>
 	{
-        private AdShootingBehavour adshootingbehavour;
         private AdExplosionEffect adprojectilescript;
-        private Transform projectilmultipool;
         private TBCHEController tbchecontroller;
         public float TBCHEPosition;
         public float TBCHEForce;
@@ -45,13 +43,13 @@ namespace TBCStusSpace
             base.OnSimulateStart();
             TBCHEForce = Module.heForce;
             TBCHERadius = Module.heradius;
-            adshootingbehavour = GetComponent<AdShootingBehavour>();
+            var adshootingbehavour = GetComponent<AdShootingBehavour>();
 
             if (StatMaster.isHosting || !StatMaster.isMP || StatMaster.isLocalSim)
             {
                 //�e�ɃX�N���v�g��\��t����
                 //���x���G�f�B�^�A�}���`�̂Ƃ�
-                projectilmultipool = GameObject.Find("PManager").transform.Find("EffectPool");
+                var projectilmultipool = GameObject.Find("PManager").transform.Find("EffectPool");
 
                 foreach (Transform child in projectilmultipool)
                 {

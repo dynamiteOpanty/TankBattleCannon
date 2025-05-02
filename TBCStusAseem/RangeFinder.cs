@@ -33,18 +33,18 @@ namespace TBCStusSpace
     public class TBCAddRangeFinderBehaviour : BlockModuleBehaviour<TBCAddRangeFinderModule>
     {
         public int blockID;
-        private int Relaodnum = 0;
+        private int Reloadnum = 0;
         private Vector3 ThisDirection;
         public MKey SpotStart;
         public Collider mCollider;
-        public float Range; 
+        public float Range;
         public LayerMask Blocklayermask = (1 << 0) | (1 << 12) | (1 << 14) | (1 << 25) | (1 << 26);
         private RaycastHit hit;
         private bool Spottrue = false;
-        private string SpotReload ;
+        private string SpotReload;
         public bool isOwnerSame = false;
         private int windowId;
-        private Rect windowRect = new Rect(375, 800, 175,50);
+        private Rect windowRect = new Rect(375, 800, 175, 50);
         private bool RangeOK = false;
         private int RangeTime = 0;
         private string rangeS = "No Find";
@@ -91,49 +91,49 @@ namespace TBCStusSpace
         public override void SimulateUpdateAlways()
         {
             base.SimulateUpdateAlways();
-            ThisDirection = - transform.up ;
+            ThisDirection = -transform.up;
             if (SpotStart.IsPressed || SpotStart.EmulationPressed())
             {
-                if(Relaodnum == 0)
+                if (Reloadnum == 0)
                 {
                     if (Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.25f, ThisDirection, out hit, Range, Blocklayermask))
                     {
                         RangeOK = true;
 
                     }
-                    Relaodnum = 1;
+                    Reloadnum = 1;
                 }
             }
         }
         public override void SimulateFixedUpdateAlways()
         {
             base.SimulateFixedUpdateAlways();
-            if (Relaodnum != 0)
+            if (Reloadnum != 0)
             {
-                Relaodnum++;
+                Reloadnum++;
             }
-            if (Relaodnum == 1000)
+            if (Reloadnum == 1000)
             {
-                Relaodnum = 0;
+                Reloadnum = 0;
             }
-            if (0 != Relaodnum)
+            if (0 != Reloadnum)
             {
-                SpotReload = (Relaodnum / 10).ToString() + " %";
+                SpotReload = (Reloadnum / 10).ToString() + " %";
             }
-            if (0 == Relaodnum)
+            if (0 == Reloadnum)
             {
                 SpotReload = "RangeFinder OK";
             }
-            if(RangeOK)
+            if (RangeOK)
             {
                 if (Physics.SphereCast(this.transform.position + 3f * ThisDirection, 0.5f, ThisDirection, out hit, Range, Blocklayermask))
                 {
-                    if(Relaodnum < 150)
+                    if (Reloadnum < 150)
                     {
                         RangeTime++;
                     }
                 }
-                if(Relaodnum > 150)
+                if (Reloadnum > 150)
                 {
                     RangeTime = 0;
                     RangeOK = false;
@@ -141,11 +141,11 @@ namespace TBCStusSpace
                 }
 
             }
-            if(Relaodnum == 550)
+            if (Reloadnum == 550)
             {
                 rangeS = "No Find";
             }
-            if(RangeTime == 100)
+            if (RangeTime == 100)
             {
                 rangeS = Math.Round(Vector3.Distance(this.transform.position, hit.point), 1).ToString();
                 RangeTime = 0;
@@ -154,15 +154,16 @@ namespace TBCStusSpace
         }
         public void OnGUI()
         {
-            if(isOwnerSame )
+            if (isOwnerSame)
             {
                 windowRect = GUILayout.Window(windowId, windowRect, delegate (int windowId)
                 {
-                GUILayout.Label(SpotReload);
-                if (RangeTime < 100 && 1 < RangeTime )
-                {
-                    GUILayout.Label(RangeTime.ToString() + " % Time limit " + ((int)(Relaodnum / 1.5)).ToString() + " %");
-                }else
+                    GUILayout.Label(SpotReload);
+                    if (RangeTime < 100 && 1 < RangeTime)
+                    {
+                        GUILayout.Label(RangeTime.ToString() + " % Time limit " + ((int)(Reloadnum / 1.5)).ToString() + " %");
+                    }
+                    else
                     {
                         GUILayout.Label(rangeS);
                     }

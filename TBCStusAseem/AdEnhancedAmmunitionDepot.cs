@@ -18,9 +18,8 @@ namespace TBCStusSpace
     public class AdEnhancedAmmunitionDepot : BlockScript
     {
         private BlockBehaviour bb;
-        private FireTag fireTag;
         private AdShootingBehavour[] ChildObjects;
-        private Transform GOparent;
+        private GameObject MachineGO;
         private bool explodeOK = true;
         public AudioSource audiosource;
         public AudioClip sound;
@@ -38,15 +37,16 @@ namespace TBCStusSpace
             audiosource.volume = 1.5f;
             sound = ModResource.GetAudioClip("APHit");
 
-            GOparent = this.transform;
             if(bb == null)
             {
                 bb = this.gameObject.GetComponent<BlockBehaviour>();
             }
-            while(GOparent.gameObject.name != "Simulation Machine")
+            var parent = this.transform;
+            while(parent.name != "Simulation Machine")
             {
-                GOparent = GOparent.transform.parent;
+                parent = parent.parent;
             }
+            MachineGO = parent.gameObject;
         }
         public override void SimulateFixedUpdateAlways()
         {
@@ -55,7 +55,7 @@ namespace TBCStusSpace
             {
                 if (bb.BlockHealth.health == 0f)
                 {
-                    fireTag = this.gameObject.GetComponent<FireTag>();
+                    var fireTag = this.gameObject.GetComponent<FireTag>();
                     if(fireTag)
                     {
                         fireTag.Ignite();
@@ -67,7 +67,8 @@ namespace TBCStusSpace
             }
             if(powerchange)
             {
-                ChildObjects = GOparent.GetComponentsInChildren<AdShootingBehavour>();
+                //TODO 毎フレーム呼ぶ必要があるか？
+                ChildObjects = MachineGO.GetComponentsInChildren<AdShootingBehavour>();
                 foreach (AdShootingBehavour childobject in ChildObjects)
                 {
                     childobject.PowerSlider.Value += 25;
